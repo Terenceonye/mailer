@@ -5,8 +5,6 @@ const validator = require('validator'); // Import validator
 require('dotenv').config(); // Load environment variables
 const cors = require('cors');
 
-// const MAIL_HOST = 'mail.gobapay.com'
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -14,6 +12,34 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+
+// Function to configure the email transporter using SMTP
+const configureTransporter = () => {
+    return nodemailer.createTransport({
+        host: process.env.EMAIL_HOST, // SMTP server for GobaPay
+        port: 587, // Port for TLS
+        secure: false, // Set to true if using port 465 for SSL
+        auth: {
+            user: process.env.EMAIL_USER, // Email from .env file
+            pass: process.env.EMAIL_PASS // Password from .env file
+        }
+    });
+};
+
+// Function to send email
+const sendEmail = (mailOptions, res) => {
+    const transporter = configureTransporter();
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).send({ error: 'Failed to send email' });
+        } else {
+            console.log('Email sent: ' + info.response);
+            return res.status(200).send({ message: 'Email sent successfully' });
+        }
+    });
+};
 
 // API route to handle Request callback
 app.post('/api/callback', (req, res) => {
@@ -36,21 +62,10 @@ app.post('/api/callback', (req, res) => {
         return res.status(400).send({ error: 'Message cannot exceed 500 characters.' });
     }
 
-    // Configure the email transporter using SMTP
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST, // SMTP server for GobaPay
-        port: 587, // Port for TLS
-        secure: false, // Set to true if using port 465 for SSL
-        auth: {
-            user: process.env.EMAIL_USER, // Email from .env file
-            pass: process.env.EMAIL_PASS // Password from .env file
-        }
-    });
-
     // Define multiple recipient emails as an array
-    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com']; // Add more emails if needed
+    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com'];
 
-    // Define the email content
+    // Define the email content for callback request
     const mailOptions = {
         from: process.env.EMAIL_USER, // Sender email address
         to: recipients.join(','), // Join array into comma-separated string
@@ -83,17 +98,8 @@ app.post('/api/callback', (req, res) => {
     };
 
     // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).send({ error: 'Failed to send email' });
-        } else {
-            console.log('Email sent: ' + info.response);
-            return res.status(200).send({ message: 'Email sent successfully' });
-        }
-    });
+    sendEmail(mailOptions, res);
 });
-
 
 // API route to handle Request Proposal
 app.post('/api/proposal', (req, res) => {
@@ -128,29 +134,18 @@ app.post('/api/proposal', (req, res) => {
         return res.status(400).send({ error: 'Message cannot exceed 500 characters.' });
     }
 
-    // Configure the email transporter using SMTP
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST, // SMTP server for GobaPay
-        port: 587, // Port for TLS
-        secure: false, // Set to true if using port 465 for SSL
-        auth: {
-            user: process.env.EMAIL_USER, // Email from .env file
-            pass: process.env.EMAIL_PASS // Password from .env file
-        }
-    });
-
     // Define multiple recipient emails as an array
-    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com']; // Add more emails if needed
+    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com'];
 
-    // Define the email content
+    // Define the email content for proposal request
     const mailOptions = {
         from: process.env.EMAIL_USER, // Sender email address
         to: recipients.join(','), // Join array into comma-separated string
-        subject: 'New Callback Request',
+        subject: 'New Proposal Request',
         html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-                <h2 style="color: #333;">New Callback Request</h2>
-                <p style="color: #555;">You have received a new callback request with the following details:</p>
+                <h2 style="color: #333;">New Proposal Request</h2>
+                <p style="color: #555;">You have received a new proposal request with the following details:</p>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Name:</td>
@@ -187,15 +182,7 @@ app.post('/api/proposal', (req, res) => {
     };
 
     // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).send({ error: 'Failed to send email' });
-        } else {
-            console.log('Email sent: ' + info.response);
-            return res.status(200).send({ message: 'Email sent successfully' });
-        }
-    });
+    sendEmail(mailOptions, res);
 });
 
 // Start the server
