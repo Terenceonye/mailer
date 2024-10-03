@@ -3,8 +3,7 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const validator = require('validator'); // Import validator
 require('dotenv').config(); // Load environment variables
-const cors = require('cors')
-
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +11,7 @@ const port = process.env.PORT || 3000;
 // Middleware to parse incoming request bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
 
 // API route to handle form submission
 app.post('/api/callback', (req, res) => {
@@ -46,10 +45,13 @@ app.post('/api/callback', (req, res) => {
         }
     });
 
+    // Define multiple recipient emails as an array
+    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com']; // Add more emails if needed
+
     // Define the email content
     const mailOptions = {
         from: process.env.EMAIL_USER, // Sender email address
-        to: 'vivimarny@gmail.com', // Replace with the recipient email
+        to: recipients.join(','), // Join array into comma-separated string
         subject: 'New Callback Request',
         html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
