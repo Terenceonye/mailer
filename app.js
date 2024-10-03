@@ -71,7 +71,7 @@ app.post('/api/callback', (req, res) => {
 
     // Define the email content for callback request
     const mailOptions = {
-        from: process.env.EMAIL_USER, // Sender email address
+        from: `"Netpro International" <${process.env.EMAIL_USER}>`, // Sender email address
         to: recipients.join(','), // Join array into comma-separated string
         subject: 'New Callback Request',
         html: `
@@ -147,7 +147,7 @@ app.post('/api/proposal', (req, res) => {
 
     // Define the email content for proposal request
     const mailOptions = {
-        from: process.env.EMAIL_USER, // Sender email address
+        from: `"Netpro International" <${process.env.EMAIL_USER}>`, // Sender email address
         to: recipients.join(','), // Join array into comma-separated string
         subject: 'New Proposal Request',
         html: `
