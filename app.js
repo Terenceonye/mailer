@@ -43,7 +43,7 @@ const sendEmail = (mailOptions, res) => {
 
 // API route to handle Request callback
 app.post('/api/callback', (req, res) => {
-    const { name, phone, location, message } = req.body;
+    const { name, phone, callTime, location, message } = req.body;
 
     // Validate inputs using validator library
     if (!name || validator.isEmpty(name.trim())) {
@@ -52,6 +52,10 @@ app.post('/api/callback', (req, res) => {
 
     if (!phone || !validator.isMobilePhone(phone, 'any')) {
         return res.status(400).send({ error: 'A valid phone number is required.' });
+    }
+
+    if (!callTime || validator.isEmpty(callTime)) {
+        return res.status(400).send({ error: 'Date and Time of call is required' });
     }
 
     if (!location || validator.isEmpty(location.trim())) {
@@ -82,6 +86,10 @@ app.post('/api/callback', (req, res) => {
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Phone:</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${phone}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Call Time:</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${callTime}</td>
                     </tr>
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Location:</td>
