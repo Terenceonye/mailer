@@ -67,7 +67,7 @@ app.post('/api/callback', (req, res) => {
     }
 
     // Define multiple recipient emails as an array
-    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com'];
+    const recipients = ['charles.odunukwe@netpro.international', 'eokereke@netpro.international'];
 
     // Define the email content for callback request
     const mailOptions = {
@@ -143,7 +143,7 @@ app.post('/api/proposal', (req, res) => {
     }
 
     // Define multiple recipient emails as an array
-    const recipients = ['vivimarny@gmail.com', 'onyeweketerence@gmail.com'];
+    const recipients = ['charles.odunukwe@netpro.international', 'eokereke@netpro.international'];
 
     // Define the email content for proposal request
     const mailOptions = {
