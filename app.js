@@ -5,7 +5,7 @@ const validator = require('validator'); // Import validator
 require('dotenv').config(); // Load environment variables
 const cors = require('cors');
 
-const MAIL_HOST = 'mail.gobapay.com'
+// const MAIL_HOST = 'mail.gobapay.com'
 
 const app = express();
 const port = process.env.PORT || 3000;
